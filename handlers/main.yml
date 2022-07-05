@@ -1,0 +1,4 @@
+---
+- name: reload sysctl
+  become: True
+  ansible.builtin.command: sysctl -q --system

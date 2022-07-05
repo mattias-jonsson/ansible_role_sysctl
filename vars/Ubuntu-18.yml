@@ -1,0 +1,4 @@
+---
+ansible_role_sysctl_dependencies:
+    - procps
+ansible_role_sysctl_path: /etc/sysctl.d/
