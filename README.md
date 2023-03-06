@@ -22,17 +22,11 @@ Role Variables
 
 Available variables are listed below, along with default values where applicable (see defaults/main.yml):
 
-    filename
-
-Name of the file to be created under /etc/sysctl.d, the order number will be prepended to this name. 
-
-    order
-
-Integer to be prepended to the filename, sysctl will read the files in order and the last value will win if specified more than once. 
-
-    settings
-
-A list of settings to be added to the file.
+| Variable | Required | Default | Comments |
+| -------- | -------- | ------- | -------- |
+| `filename` | No | [] | List of filenames. Name of the file to be created under /etc/sysctl.d, the order number will be prepended to this name. Each file can have their own setting, see example playbook below. |
+| `order` | No | | Integer to be prepended to the filename, sysctl will read the files in order and the last value will win if specified more than once. |
+| `settings` | No | | Settings to be added to the file, see example playbook below. |
 
 Dependencies
 ------------
@@ -62,6 +56,7 @@ This example created two files, 97_customentries.conf and 98_swappiness.conf und
               vm.overcommit_ratio: 100
               vm.nr_hugepages: 0
               vm.zone_reclaim_mode: 0
+
         - filename: swappiness
             order: 98
             settings:
