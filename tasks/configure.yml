@@ -1,35 +1,37 @@
 ---
-- name: add configurations to sysctl.conf
-  become: True
+
+- name: Add configurations to sysctl.conf.
+  become: true
   ansible.builtin.template:
     src: sysctl.conf.j2
     dest: /etc/sysctl.conf
     owner: root
     group: root
-    mode: 0644
-    backup: yes
-  notify: reload sysctl
+    mode: '0644'
+    backup: true
+  notify: Reload sysctl
 
-- name: add /etc/sysctl.d directory
-  become: True
+- name: Add /etc/sysctl.d directory.
+  become: true
   ansible.builtin.file:
-    mode: 0755
+    mode: '0755'
     owner: root
     group: root
     path: /etc/sysctl.d
     state: directory
 
-
-- name: add configurations to sysctl.d
-  become: True
+- name: Add configurations to sysctl.d.
+  become: true
   ansible.builtin.template:
     src: sysctl_d.j2
-    dest: "{{ ansible_role_sysctl_path + item.order|string + '-' + item.filename if (item.filename | splitext)[1] == '.conf' else (ansible_role_sysctl_path + item.order|string + '-' + item.filename + '.conf') }}"
+    dest: >
+      "{{ ansible_role_sysctl_path + item.order|string + '-' + item.filename if (item.filename | splitext)[1] == '.conf'
+        else (ansible_role_sysctl_path + item.order | string + '-' + item.filename + '.conf') }}"
     owner: root
     group: root
-    mode: 0644
-    backup: yes
-  notify: reload sysctl
+    mode: '0644'
+    backup: true
+  notify: Reload sysctl
   loop: "{{ ansible_role_sysctl_d }}"
   when:
     - item.filename is defined
