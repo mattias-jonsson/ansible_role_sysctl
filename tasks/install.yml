@@ -5,4 +5,4 @@
   ansible.builtin.package:
     name: "{{ item }}"
     state: present
-  with_items: "{{ ansible_role_sysctl_dependencies }}"
+  with_items: "{{ sysctl_dependencies }}"

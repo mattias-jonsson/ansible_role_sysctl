@@ -1,24 +1,21 @@
 ---
 galaxy_info:
   author: Mattias Jonsson
-  description: Ansible role to handle sysctl configuration on supported distributions.
-  min_ansible_version: 2.13.0
-  role_name: ansible_role_sysctl
+  namespace: mattias-jonsson
+  description: This Ansible role configures sysctl settings by overwriting the `/etc/sysctl.conf` file and creating additional configuration files under the `/etc/sysctl.d` directory as specified by the role variables.
+  min_ansible_version: 2.16.0
+  role_name: sysctl
   license: MIT
   platforms:
     - name: EL
       versions:
-        - "7"
-        - "8"
+        - all
     - name: Fedora
       versions:
-        - "34"
+        - all
     - name: Debian
       versions:
-        - buster
-        - bullseye
+        - all
     - name: Ubuntu
       versions:
-        - bionic
-        - focal
-        - jammy
+        - all

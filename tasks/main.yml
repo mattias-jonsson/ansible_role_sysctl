@@ -3,11 +3,12 @@
 - name: Include variables specific for the distribution.
   ansible.builtin.include_vars: "{{ item }}"
   with_items:
-    - "{{ ansible_family }}.yml"
+    - "{{ ansible_os_family }}.yml"
 
-- name: Import install tasks.
-  ansible.builtin.import_tasks:
+- name: Include install tasks.
+  ansible.builtin.include_tasks:
     file: install.yml
-- name: Import configure tasks.
-  ansible.builtin.import_tasks:
+
+- name: Include configure tasks.
+  ansible.builtin.include_tasks:
     file: configure.yml

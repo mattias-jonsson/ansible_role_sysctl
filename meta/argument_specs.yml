@@ -1,0 +1,22 @@
+---
+
+argument_specs:
+  main:
+    short_description: "Configures sysctl parameters by creating configuration files in /etc/sysctl.d/."
+    options:
+      sysctl_config_backup:
+        description: >
+          Indicates whether a backup of any modified configuration files should be created.
+        required: false
+        type: bool
+        default: true
+      sysctl_d:
+        description: >
+          A list of dictionaries, each representing a sysctl configuration.
+          Each dictionary must contain:
+            - filename: The name of the file to be created under /etc/sysctl.d/, prefixed with the order number.
+            - order: An integer used as the prefix for the filename. The sysctl command processes files in numerical order, with later values taking precedence.
+            - settings: A dictionary of sysctl parameters and their respective values.
+        required: true
+        type: list
+        elements: dict

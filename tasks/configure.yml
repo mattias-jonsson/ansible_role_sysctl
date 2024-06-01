@@ -8,7 +8,7 @@
     owner: root
     group: root
     mode: '0644'
-    backup: true
+    backup: '{{ sysctl_config_backup }}'
   notify: Reload sysctl
 
 - name: Add /etc/sysctl.d directory.
@@ -24,15 +24,16 @@
   become: true
   ansible.builtin.template:
     src: sysctl_d.j2
-    dest: >
-      "{{ ansible_role_sysctl_path + item.order|string + '-' + item.filename if (item.filename | splitext)[1] == '.conf'
-        else (ansible_role_sysctl_path + item.order | string + '-' + item.filename + '.conf') }}"
+    dest: >-
+      {{ sysctl_path + item.order|string + '-' + item.filename
+          if (item.filename | splitext)[1] == '.conf'
+          else sysctl_path + item.order|string + '-' + item.filename + '.conf' }}
     owner: root
     group: root
     mode: '0644'
-    backup: true
+    backup: '{{ sysctl_config_backup }}'
   notify: Reload sysctl
-  loop: "{{ ansible_role_sysctl_d }}"
+  loop: "{{ sysctl_d }}"
   when:
     - item.filename is defined
     - item.order is defined

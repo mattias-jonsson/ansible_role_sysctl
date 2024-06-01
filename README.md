@@ -1,37 +1,31 @@
-Ansible Role: ansible_role_sysctl
+Ansible Role: sysctl
 =========
 
-An Ansible role that configures sysctl entries. The /etc/sysctl.conf is replaced with a template, removing any modifcations made. Files are created under /etc/sysctl.d with entries specified in role variables. A backup is created for any modified file in the format of \<filename\>.{{timestamp}}.bkp.
+This Ansible role configures sysctl settings by overwriting the `/etc/sysctl.conf` file and creating additional configuration files under the `/etc/sysctl.d` directory as specified by the role variables.
+
 This role supports the following Linux distributions:
 
-<ul>
-<li>Fedora 34
-<li>CentOS 7/8
-<li>Red Hat Enterprise Linux 7/8
-<li>Debian 10/11
-<li>Ubuntu 18/20/22
-</ul>
-
-Requirements
-------------
-
-This role has no dependencies besides what is included in Ansible Core.
+- Enterprise Linux (RedHat, CentOS, Alma Linux OS, Rocky Linux etc.)
+- Debian-based (Debian, Ubuntu etc.)
 
 Role Variables
 --------------
 
 Available variables are listed below, along with default values where applicable (see defaults/main.yml):
 
-| Variable | Required | Default | Comments |
-| -------- | -------- | ------- | -------- |
-| `filename` | No | [] | List of filenames. Name of the file to be created under /etc/sysctl.d, the order number will be prepended to this name. Each file can have their own setting, see example playbook below. |
-| `order` | No | | Integer to be prepended to the filename, sysctl will read the files in order and the last value will win if specified more than once. |
-| `settings` | No | | Settings to be added to the file, see example playbook below. |
+| Variable                | Required | Default | Description                                                                                                                 |
+|-------------------------|----------|---------|-----------------------------------------------------------------------------------------------------------------------------|
+| `sysctl_config_backup`  | No       | true    | Indicates whether a backup of any modified configuration files should be created.                                           |
+| `sysctl_d`              | Yes      | []      | A list of dictionaries, each representing a sysctl configuration. Each dictionary contains `filename`, `order`, and `settings`. See details below.  |
 
-Dependencies
-------------
+Each dictionary in the `sysctl_d` list includes the following keys:
 
-This role has no external dependencies.
+| Key        | Required | Description                                                                                                         |
+|------------|----------|---------------------------------------------------------------------------------------------------------------------|
+| `filename` | Yes      | The name of the file to be created under `/etc/sysctl.d/`, prefixed with the `order` number.                        |
+| `order`    | Yes      | An integer used as the prefix for `filename`. The sysctl command processes files in numerical order, with later values taking precedence. |
+| `settings` | Yes      | A dictionary of sysctl parameters and their respective values.                                                      |
+                                         |
 
 Example Playbook
 ----------------
@@ -41,29 +35,22 @@ This example created two files, 97_customentries.conf and 98_swappiness.conf und
     - hosts: servers
 
       vars:
-        ansible_role_sysctl_d:
+        sysctl_config_backup: true
+        sysctl_d:
         - filename: customentries
             order: 97
             settings:
               kernel.core_pattern: /var/log/core.%e.%p
               net.ipv6.conf.all.disable_ipv6: 1
               net.ipv6.conf.default.disable_ipv6: 1
-              vm.min_free_kbytes: 2097152
-              kernel.numa_balancing: 0
-              fs.nr_open: 1048576
-              vm.max_map_count: 262140
-              vm.overcommit_memory: 2
-              vm.overcommit_ratio: 100
-              vm.nr_hugepages: 0
-              vm.zone_reclaim_mode: 0
 
         - filename: swappiness
             order: 98
             settings:
-              vm.wappiness: 10
+              vm.swappiness: 10
 
       roles:
-         - role: ansible_role_sysctl
+         - role: sysctl
 
 License
 -------
